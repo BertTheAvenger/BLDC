@@ -30,7 +30,7 @@ public class MvcView {
         mainPanel = new MainPanel();
         mainPanel.setPreferredSize(new Dimension(500,500));
         frame.setContentPane(mainPanel);
-
+        frame.setMinimumSize(new Dimension(800,600));
         frame.pack();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //Exit program on window close.
 

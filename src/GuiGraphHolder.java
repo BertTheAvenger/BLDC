@@ -6,14 +6,14 @@ import java.awt.*;
 
 public class GuiGraphHolder extends JPanel {
 
-    GuiGraph angleGraph;
+    GuiPlot angleGraph;
     GuiGraphHolder()
     {
         super(new GridBagLayout());
         setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10,10,10,10), new TitledBorder(new LineBorder(Color.GRAY, 1), "Graphs")));
         GridBagConstraints c = new GridBagConstraints();
 
-        angleGraph = new GuiGraph();
+        angleGraph = new GuiPlot();
         angleGraph.setBorder(new EmptyBorder(10,10,10,10));
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
