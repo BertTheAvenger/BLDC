@@ -2,6 +2,8 @@
   <library name="jSerialComm-2.3.0">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jSerialComm-2.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.23.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -1,8 +1,7 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
+
+
 
 public class MainPanel extends JPanel implements GuiComponent{
     private JPanel graphPanel;
@@ -27,6 +26,7 @@ public class MainPanel extends JPanel implements GuiComponent{
 
         controlPanel = new JPanel(new GridBagLayout());
         c.gridx = 0;
+        //c.weightx = .8;
         add(controlPanel, c);
 
     }
