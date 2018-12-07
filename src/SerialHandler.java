@@ -18,6 +18,20 @@ class SerialHandler {
         port = SerialPort.getCommPort(portName);
         if(port.openPort()) {
             serialStatus = true;
+            port.addDataListener(new SerialPortDataListener() {
+                @Override
+                public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
+                @Override
+                public void serialEvent(SerialPortEvent event)
+                {
+                    if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
+                        return;
+                    byte[] newData = new byte[port.bytesAvailable()];
+                    int numRead = port.readBytes(newData, newData.length);
+                    System.out.println("Read " + numRead + " bytes.");
+                }
+            });
+
             return true;
         }
         else
@@ -25,4 +39,6 @@ class SerialHandler {
             return false;
         }
     }
+
+    static void sendSerialPacket(){}
 }

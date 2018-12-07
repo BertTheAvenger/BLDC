@@ -7,6 +7,7 @@ public class Main {
 
         //Init GUI elements
 
+
         MvcController.passObjects(new MvcModel());
         MvcController.startInterface();
         //System.out.println(Arrays.toString(sh.getPorts()));
