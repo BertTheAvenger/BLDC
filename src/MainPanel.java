@@ -1,6 +1,10 @@
+import Serial.Command;
+import Serial.HANDSHAKECOMMAND;
+import Serial.SETPHASECOMMAND;
+
 import javax.swing.*;
 import java.awt.*;
-
+import java.awt.event.ActionEvent;
 
 
 public class MainPanel extends JPanel implements GuiComponent{
@@ -26,8 +30,16 @@ public class MainPanel extends JPanel implements GuiComponent{
 
         controlPanel = new JPanel(new GridBagLayout());
         c.gridx = 0;
-        //c.weightx = .8;
         add(controlPanel, c);
+
+        controlPanel.add(new JButton(new AbstractAction("Send Handshake") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SerialHandler.addCommandToBuffer(new HANDSHAKECOMMAND());
+                SerialHandler.addCommandToBuffer(new SETPHASECOMMAND(1,126));
+                SerialHandler.sendSerialPacket();
+            }
+        }));
 
     }
 
