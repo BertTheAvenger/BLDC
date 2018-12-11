@@ -10,6 +10,13 @@ class SerialHandler {
     private static SerialPort port;
     private static boolean serialStatus = false;
     private static ArrayList<Command> sendBuffer = new ArrayList<>();
+
+    private static boolean recievingPacket = false;
+    private static int byteNumber;
+    private static int packetLength;
+
+    private static int[] incomingPacket;
+
     static String[] getPorts()
     {
         return Arrays.stream(SerialPort.getCommPorts()).map(SerialPort::getSystemPortName).toArray(String[]::new); //Get ports objects, that arr to Stream, each then converted to string by getSystemPortName, then back to string arr.
@@ -31,6 +38,7 @@ class SerialHandler {
                     if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                         return;
                     byte[] newData = new byte[port.bytesAvailable()];
+
                     int numRead = port.readBytes(newData, newData.length);
                     System.out.println("Read " + numRead + " bytes.");
                 }

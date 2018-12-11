@@ -1,5 +1,7 @@
 package Serial;
 
+//Command 2, 2 bytes.
+//1st byte is phase # (1-3), second is byte representing PWM power to apply.
 public class SETPHASECOMMAND extends Command
 {
     private int CommandByte = 2;
