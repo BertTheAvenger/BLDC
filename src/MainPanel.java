@@ -1,6 +1,5 @@
-import Serial.Command;
-import Serial.HANDSHAKECOMMAND;
-import Serial.SETPHASECOMMAND;
+import Serial.TXCommands.TXHANDSHAKE;
+import Serial.TXCommands.TXSETPHASEDUTY;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,8 +34,7 @@ public class MainPanel extends JPanel implements GuiComponent{
         controlPanel.add(new JButton(new AbstractAction("Send Handshake") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SerialHandler.addCommandToBuffer(new HANDSHAKECOMMAND());
-                SerialHandler.addCommandToBuffer(new SETPHASECOMMAND(1,126));
+                SerialHandler.addCommandToBuffer(new TXHANDSHAKE());
                 SerialHandler.sendSerialPacket();
             }
         }));

@@ -1,9 +1,9 @@
-import Serial.Command;
+import Serial.TXCommand;
 
 import java.util.ArrayList;
 
 public class SerialPacket {
-    ArrayList<Command> commandBuffer;
+    ArrayList<TXCommand> TXCommandBuffer;
     ArrayList<Integer> buffer;
     public SerialPacket()
     {
