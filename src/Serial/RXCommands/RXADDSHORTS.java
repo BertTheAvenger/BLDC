@@ -30,7 +30,7 @@ public class RXADDSHORTS implements RXCommand { //CMDBYTE 3
 
     @Override
     public String toReadableString() {
-        return "ADDINT - int:" + result;
+        return "ADDINT - int: " + result;
     }
 
     @Override

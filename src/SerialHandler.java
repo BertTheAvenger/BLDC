@@ -13,6 +13,8 @@ class SerialHandler {
     private static SerialPort port;
     private static boolean serialStatus = false;
 
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
     private static final RXCommand[] rxCommandRegister = {null, new RXHANDSHAKE(), null ,new RXADDSHORTS()}; //Register of RX commands. Command byte is index.
 
 
@@ -105,7 +107,12 @@ class SerialHandler {
         RXCommand command = rxCommandRegister[packet[0]]; //Get relevant command.
         command.setBytes(packet);
         System.out.println("RECIEVED: " + command.toReadableString());
-        //System.out.println("BYTES RECIEVED: " + Arrays.toString(packet));
+        System.out.println("BYTES RECIEVED:");
+        for(byte b : packet)
+        {
+            System.out.print(" " + bytesToHex(new byte[]{b}));
+        }
+        System.out.println("");
 
     }
 
@@ -116,8 +123,24 @@ class SerialHandler {
         outBuffer[0] = 0;
         System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getLength()); //Append command to end of buffer
 
-        //System.out.println("BYTES SENT:" + Arrays.toString(outBuffer));
+        System.out.println("BYTES SENT:");
+        for(byte b : outBuffer)
+        {
+            System.out.print(" " + bytesToHex(new byte[]{b}));
+        }
+        System.out.println("");
         port.writeBytes(outBuffer, outBuffer.length);
 
     }
+
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
 }
+

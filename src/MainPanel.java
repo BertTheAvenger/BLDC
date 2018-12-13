@@ -35,7 +35,7 @@ public class MainPanel extends JPanel implements GuiComponent{
         controlPanel.add(new JButton(new AbstractAction("Send Handshake") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SerialHandler.sendSerialCommand(new TXHANDSHAKE());
+                SerialHandler.sendSerialCommand(new TXADDSHORTS((short)5209, (short) 2000));
             }
         }));
 

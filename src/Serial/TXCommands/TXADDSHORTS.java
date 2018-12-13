@@ -29,9 +29,9 @@ public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON T
         buffer[0] = (byte)getCommandByte();
 
         byte[] aOut = ByteBuffer.allocate(2).putShort(a).array(); //Create array for our int.
-        System.out.println(Arrays.toString(aOut));
+        //System.out.println(Arrays.toString(aOut));
         byte[] bOut = ByteBuffer.allocate(2).putShort(b).array(); //Create array for our int.
-        System.out.println(Arrays.toString(bOut));
+        //System.out.println(Arrays.toString(bOut));
         System.arraycopy(aOut, 0, buffer, 1, aOut.length);
         System.arraycopy(bOut, 0, buffer, aOut.length + 1, bOut.length);
         //System.out.println(Arrays.toString(buffer));
@@ -40,7 +40,7 @@ public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON T
 
     @Override
     public String toReadableString() {
-        return "HANDSHAKE";
+        return "ADDSHORTS: " + a + " " + b;
     }
 
     @Override
