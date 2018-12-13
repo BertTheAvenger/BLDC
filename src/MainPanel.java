@@ -1,3 +1,4 @@
+import Serial.TXCommands.TXADDSHORTS;
 import Serial.TXCommands.TXHANDSHAKE;
 import Serial.TXCommands.TXSETPHASEDUTY;
 
@@ -34,8 +35,7 @@ public class MainPanel extends JPanel implements GuiComponent{
         controlPanel.add(new JButton(new AbstractAction("Send Handshake") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SerialHandler.addCommandToBuffer(new TXHANDSHAKE());
-                SerialHandler.sendSerialPacket();
+                SerialHandler.sendSerialCommand(new TXHANDSHAKE());
             }
         }));
 

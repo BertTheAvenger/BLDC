@@ -4,8 +4,8 @@ class MvcModel {
 
     MvcModel()
     {
-        selectedSerialPort = "";
-        baudRate = 115200; //Default baudrate
+        selectedSerialPort = "COM25";
+        baudRate = 9600; //Default baudrate
     }
     void setSelectedSerialPort(String port){
         this.selectedSerialPort = port;
