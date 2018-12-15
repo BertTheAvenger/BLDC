@@ -4,16 +4,16 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class GuiGraphHolder extends JPanel {
+public class MvcGraphHolder extends JPanel {
 
-    Graph angleGraph;
-    GuiGraphHolder()
+    MvcAngleGraph angleGraph;
+    MvcGraphHolder()
     {
         super(new GridBagLayout());
         setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10,10,10,10), new TitledBorder(new LineBorder(Color.GRAY, 1), "Graphs")));
         GridBagConstraints c = new GridBagConstraints();
 
-        angleGraph = new Graph();
+        angleGraph = new MvcAngleGraph();
         //angleGraph.setBorder(new EmptyBorder(10,10,10,10));
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;

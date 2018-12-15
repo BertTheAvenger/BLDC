@@ -1,5 +1,6 @@
 class MvcController {
     private static MvcModel model;
+    private static int controlMode = 0;
 
     static void passObjects(MvcModel model) {
         MvcController.model = model;
@@ -8,6 +9,7 @@ class MvcController {
     static void startInterface()
     {
         MvcView.constructGui();
+        MotorDriver.init();
     } //Starts interface
 
     static void setSerialPort(String serialPort){model.setSelectedSerialPort(serialPort);} //Sets model serial port.
@@ -28,7 +30,8 @@ class MvcController {
             System.out.println("CONNECTION FAILED!");
         }
     }
-    static void serialDisconnectActionPreformed(){ //Called when serial disconnect button is clicked. Handles logic to reset serial stuff.
+    static void serialDisconnectActionPreformed() { //Called when serial disconnect button is clicked. Handles logic to reset serial stuff.
+        SerialHandler.closeSerialConnection();
         MvcView.setSerialActionConnect();
     }
 }

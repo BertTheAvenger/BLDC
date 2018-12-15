@@ -1,14 +1,13 @@
 import javax.swing.*;
-import javax.swing.event.MenuListener;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class MvcView {
     private static final int startingHeight = 400;
     private static final int startingWidth = 600;
 
     private static MvcViewJMenuBar menuBar;
-    private static MainPanel mainPanel;
+    private static MvcMainPanel mainPanel;
 
     private
     //Serial menuBar components
@@ -20,6 +19,18 @@ public class MvcView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //Disable "focused" borders on all ui elements
+        UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("ToggleButton.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("CheckBox.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("TabbedPane.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("RadioButton.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("Slider.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("ToggleButton.light", new ColorUIResource(new Color(255, 0, 0, 1)));
+
+
+        // figure out combobox
+        UIManager.put("ComboBox.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
 
         JFrame frame = new JFrame();
         //frame.setJMenuBar(constructJMB());
@@ -27,7 +38,7 @@ public class MvcView {
         menuBar = new MvcViewJMenuBar();
         frame.setJMenuBar(menuBar);
 
-        mainPanel = new MainPanel();
+        mainPanel = new MvcMainPanel();
         mainPanel.setPreferredSize(new Dimension(500,500));
         frame.setContentPane(mainPanel);
         frame.setMinimumSize(new Dimension(800,600));
@@ -40,7 +51,7 @@ public class MvcView {
     //Menu Bar passthrough functions
     static void updateSerialMenu(String[] ports, String selectedPort){menuBar.updateSerialMenu(ports, selectedPort);}
     static void updateBaudRates(int[] rates, int selectedRate){menuBar.updateBaudRates(rates, selectedRate);}
-    static void setSerialActionConnect(){ menuBar.setSerialActionConnect(); }
-    static void setSerialActionDisconnect(){ menuBar.setSerialActionDisconnect(); }
+    static void setSerialActionConnect(){ menuBar.setSerialActionConnect(); mainPanel.setSerialStatus(0);}
+    static void setSerialActionDisconnect(){ menuBar.setSerialActionDisconnect(); mainPanel.setSerialStatus(1); }
 
 }

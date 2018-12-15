@@ -1,11 +1,12 @@
 package Serial.RXCommands;
 
 import Serial.RXCommand;
+import Serial.RXCommandEnums;
 
-public class RXHANDSHAKE implements RXCommand {
+public class RXACK implements RXCommand {
     @Override
     public String toReadableString() {
-        return "HANDSHAKE";
+        return "ACK";
     }
 
     @Override
@@ -16,5 +17,10 @@ public class RXHANDSHAKE implements RXCommand {
     @Override
     public void setBytes(byte[] commandBytes) {
 
+    }
+
+    @Override
+    public RXCommandEnums getCommand() {
+        return null;
     }
 }

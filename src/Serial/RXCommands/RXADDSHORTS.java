@@ -1,6 +1,7 @@
 package Serial.RXCommands;
 
 import Serial.RXCommand;
+import Serial.RXCommandEnums;
 
 import java.nio.ByteBuffer;
 
@@ -21,6 +22,11 @@ public class RXADDSHORTS implements RXCommand { //CMDBYTE 3
 
     @Override
     public void setBytes(byte[] commandBytes) { parseBytes(commandBytes);}
+
+    @Override
+    public RXCommandEnums getCommand() {
+        return null;
+    }
 
     public void parseBytes(byte[] commandBytes)
     {

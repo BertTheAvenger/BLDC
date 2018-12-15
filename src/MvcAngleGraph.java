@@ -2,6 +2,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
@@ -10,49 +11,57 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-class Graph extends JPanel
+class MvcAngleGraph extends JPanel
 {
-    private ArrayList<XYSeries> lineData;
+    private XYSeries data;
     private ChartPanel chartPanel;
     private JFreeChart chart;
     private Font axisFont;
     private Font titleFont;
 
-    public Graph()
+    public MvcAngleGraph()
     {
         axisFont = new Font("Dialog", Font.PLAIN, 12);
         titleFont = new Font("Dialog", Font.PLAIN, 15);
 
+
         setLayout(new GridLayout());
         setMinimumSize(new Dimension(0,0));
         setPreferredSize(new Dimension(0,0));
-        final XYSeries series = new XYSeries("Random Data");
-        series.add(1.0, 500.2);
-        series.add(5.0, 694.1);
-        series.add(4.0, 100.0);
-        series.add(12.5, 734.4);
-        series.add(17.3, 453.2);
-        series.add(21.2, 500.2);
-        series.add(21.9, null);
-        series.add(25.6, 734.4);
-        series.add(30.0, 453.2);
-        final XYSeriesCollection data = new XYSeriesCollection(series);
+        data = new XYSeries("Actual Angle");
+        data.add(1,2);
+        data.add(500,100);
+        XYSeriesCollection collection = new XYSeriesCollection(data);
         chart = ChartFactory.createXYLineChart(
-                "XY Series Demo",
-                "X",
-                "Y",
-                data,
+                "Motor Angles : Commanded vs. Actual",
+                "Commanded Angle",
+                "Actual Angle",
+                collection,
                 PlotOrientation.VERTICAL,
                 true,
                 true,
                 false
         );
-
+        //Set fonts
         chart.getXYPlot().getDomainAxis().setLabelFont(axisFont);
         chart.getXYPlot().getRangeAxis().setLabelFont(axisFont);
         chart.getTitle().setFont(titleFont);
 
+        //Set domain and range
+        chart.getXYPlot().getDomainAxis().setAutoRange(false);
+        chart.getXYPlot().getDomainAxis().setRange(new Range(0,2400));
+        chart.getXYPlot().getRangeAxis().setAutoRange(false);
+        chart.getXYPlot().getRangeAxis().setRange(new Range(0,360));
+
+
+
         chartPanel = new ChartPanel(chart);
+        chartPanel.setMaximumDrawHeight(5000);
+        chartPanel.setMaximumDrawWidth(5000);
+        chartPanel.setMinimumDrawWidth(10);
+        chartPanel.setMinimumDrawHeight(10);
+        chartPanel.setDomainZoomable(false);
+        chartPanel.setRangeZoomable(false);
         //chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         add(chartPanel);
 

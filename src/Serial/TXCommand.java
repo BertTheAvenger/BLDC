@@ -5,5 +5,7 @@ public interface TXCommand extends Command {//Interface for commands GOING TO Ar
 
     byte[] getByteArray();
 
+    boolean requireAck();
+
 
 }

@@ -1,12 +1,12 @@
 import Serial.RXCommand;
+import Serial.RXCommandEnums;
+import Serial.RXCommands.RXACK;
 import Serial.RXCommands.RXADDSHORTS;
-import Serial.RXCommands.RXHANDSHAKE;
+import Serial.RXCommands.RXNUMBERTEST;
 import Serial.TXCommand;
 import com.fazecast.jSerialComm.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.util.*;
 
 class SerialHandler {
     private static final int[] baudrates = {9600, 115200};
@@ -15,13 +15,23 @@ class SerialHandler {
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
-    private static final RXCommand[] rxCommandRegister = {null, new RXHANDSHAKE(), null ,new RXADDSHORTS()}; //Register of RX commands. Command byte is index.
+    private static Map<RXCommandEnums, RXCommand> rxCommandRegister;
+    static { //Populate RXCommand register.
+        rxCommandRegister = new HashMap<>();
+        rxCommandRegister.put(RXCommandEnums.ACK, new RXACK());
+        rxCommandRegister.put(RXCommandEnums.ADDSHORTS, new RXADDSHORTS());
+        rxCommandRegister.put(RXCommandEnums.NUMBERTEST, new RXNUMBERTEST());
+    }
 
 
     private static boolean recievingPacket = false;
     private static byte[] packet;
     private static int packetIndex = 0;
     private static int packetLength = 0;
+
+    private static boolean waitingOnAck = false;
+
+    private static List<SerialEventListener> listeners = new ArrayList<>();
 
     static String[] getPorts()
     {
@@ -51,11 +61,23 @@ class SerialHandler {
                 }
             });
 
+
+
             return true;
         }
         else
         {
             return false;
+        }
+    }
+
+    static void closeSerialConnection()
+    {
+        if(serialStatus)
+        {
+            serialStatus = false;
+            port.removeDataListener();
+            port.closePort();
         }
     }
 
@@ -74,7 +96,7 @@ class SerialHandler {
         }
         else if(recievingPacket && packetIndex == 0) //Catch second overall byte, first byte which is recorded, which is command byte.
         {
-            packetLength = rxCommandRegister[b].getLength(); //Get corrosponding command object length.
+            packetLength = rxCommandRegister.get(RXCommandEnums.fromInt(b)).getLength(); //Get corrosponding command object length.
             packet = new byte[packetLength]; //Init packet array with this length
 
             packet[packetIndex] = inputByte; //Record first byte.
@@ -84,7 +106,7 @@ class SerialHandler {
             {
 
                 recievingPacket = false;
-                parseCommand(packet); //Parse commands,
+                recieveSerialCommand(packet); //Parse commands,
             }
         }
         else if(recievingPacket && packetIndex < packetLength - 1) //If recieving and in range, just keep adding the bytes.
@@ -96,41 +118,36 @@ class SerialHandler {
         {
             packet[packetIndex] = inputByte; //Record first byte.
             recievingPacket = false;
-            parseCommand(packet); //Parse commands,
+            recieveSerialCommand(packet); //Parse commands,
         }
         //Otherwise, not part of packet. Just let it go.
 
     }
 
-    static void parseCommand(byte[] packet)
+    static void recieveSerialCommand(byte[] packet)
     {
-        RXCommand command = rxCommandRegister[packet[0]]; //Get relevant command.
+        RXCommand command = rxCommandRegister.get(RXCommandEnums.fromByte(packet[0])); //Get relevant command.
         command.setBytes(packet);
         System.out.println("RECIEVED: " + command.toReadableString());
-        System.out.println("BYTES RECIEVED:");
-        for(byte b : packet)
-        {
-            System.out.print(" " + bytesToHex(new byte[]{b}));
-        }
-        System.out.println("");
+        eventTriggered(command);
 
     }
 
     static void sendSerialCommand(TXCommand command){
-        System.out.println("SENDING: " + command.toReadableString());
-        byte[] outBuffer = new byte[command.getLength() + 1];
-
-        outBuffer[0] = 0;
-        System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getLength()); //Append command to end of buffer
-
-        System.out.println("BYTES SENT:");
-        for(byte b : outBuffer)
+        if(serialStatus && port.isOpen())
         {
-            System.out.print(" " + bytesToHex(new byte[]{b}));
-        }
-        System.out.println("");
-        port.writeBytes(outBuffer, outBuffer.length);
+            System.out.println("SENDING: " + command.toReadableString());
+            byte[] outBuffer = new byte[command.getLength() + 1];
 
+            outBuffer[0] = 0;
+            System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getLength()); //Append command to end of buffer
+
+            port.writeBytes(outBuffer, outBuffer.length);
+        }
+        else
+        {
+            MvcController.serialDisconnectActionPreformed();
+        }
     }
 
     public static String bytesToHex(byte[] bytes) {
@@ -142,5 +159,19 @@ class SerialHandler {
         }
         return new String(hexChars);
     }
+
+    public static void addListener(SerialEventListener listener)
+    {
+        listeners.add(listener);
+    }
+
+    private static void eventTriggered(RXCommand command)
+    {
+        for(SerialEventListener l : listeners)
+        {
+            l.serialEvent(command);
+        }
+    }
+
 }
 

@@ -1,6 +1,7 @@
 package Serial.RXCommands;
 
 import Serial.RXCommand;
+import Serial.RXCommandEnums;
 
 import java.nio.ByteBuffer;
 
@@ -19,6 +20,11 @@ public class RXNUMBERTEST implements RXCommand { //CMDBYTE 2
     }
     @Override
     public void setBytes(byte[] commandBytes) { parseBytes(commandBytes);}
+
+    @Override
+    public RXCommandEnums getCommand() {
+        return null;
+    }
 
     public void parseBytes(byte[] commandBytes)
     {

@@ -28,6 +28,11 @@ public class TXSETPHASEDUTY implements TXCommand
     }
 
     @Override
+    public boolean requireAck() {
+        return false;
+    }
+
+    @Override
     public String toReadableString() {
         return "PHASE " + phase + " TO " + pwm;
     }

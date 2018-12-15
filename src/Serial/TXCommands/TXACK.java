@@ -2,7 +2,7 @@ package Serial.TXCommands;
 
 import Serial.TXCommand;
 
-public class TXHANDSHAKE implements TXCommand
+public class TXACK implements TXCommand
 {
     private byte CommandByte = 1;
 
@@ -18,8 +18,13 @@ public class TXHANDSHAKE implements TXCommand
     }
 
     @Override
+    public boolean requireAck() {
+        return false;
+    }
+
+    @Override
     public String toReadableString() {
-        return "HANDSHAKE";
+        return "ACK";
     }
 
     @Override

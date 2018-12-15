@@ -39,6 +39,11 @@ public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON T
     }
 
     @Override
+    public boolean requireAck() {
+        return false;
+    }
+
+    @Override
     public String toReadableString() {
         return "ADDSHORTS: " + a + " " + b;
     }
