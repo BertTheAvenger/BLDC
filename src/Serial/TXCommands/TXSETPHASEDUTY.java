@@ -2,6 +2,8 @@ package Serial.TXCommands;
 
 import Serial.TXCommand;
 
+import java.nio.ByteBuffer;
+
 //TXCommand 2, 2 bytes.
 //1st byte is phase # (1-3), second is byte representing PWM power to apply.
 public class TXSETPHASEDUTY implements TXCommand
@@ -24,7 +26,12 @@ public class TXSETPHASEDUTY implements TXCommand
     @Override
     public byte[] getByteArray() {
 
-        return new byte[]{CommandByte, phase, pwm};
+        byte[] buffer = new byte[getLength()];
+        buffer[0] = (byte)getCommandByte();
+        buffer[1] = phase;
+        buffer[2] = pwm;
+        //System.out.println(Arrays.toString(buffer));
+        return buffer;
     }
 
     @Override

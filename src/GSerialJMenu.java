@@ -3,12 +3,12 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 
-class MvcSerialJMenu extends JMenu {
+class GSerialJMenu extends JMenu {
     private JMenu portMenu;
     private JMenu rateMenu;
     private JMenuItem serialConnectionJMenuItem;
 
-    MvcSerialJMenu()
+    GSerialJMenu()
     {
         super("Serial"); //Title of menu
         construct();

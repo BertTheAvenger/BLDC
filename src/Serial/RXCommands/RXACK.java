@@ -21,6 +21,6 @@ public class RXACK implements RXCommand {
 
     @Override
     public RXCommandEnums getCommand() {
-        return null;
+        return RXCommandEnums.ACK;
     }
 }

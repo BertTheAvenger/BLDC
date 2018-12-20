@@ -1,18 +1,16 @@
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.*;
 
-public class MvcViewJMenuBar extends JMenuBar {
+public class GViewJMenuBar extends JMenuBar {
     private JMenuBar menuBar;
-    private MvcSerialJMenu serialMenu;
+    private GSerialJMenu serialMenu;
 
-    MvcViewJMenuBar()
+    GViewJMenuBar()
     {
         super();
         construct();
     }
     private void construct() { //Construct JMenuBar components.
-        serialMenu = new MvcSerialJMenu();
+        serialMenu = new GSerialJMenu();
         add(serialMenu);
 
         setVisible(true);

@@ -9,7 +9,7 @@ class MvcController {
     static void startInterface()
     {
         MvcView.constructGui();
-        MotorDriver.init();
+        HardwareDriver.init();
     } //Starts interface
 
     static void setSerialPort(String serialPort){model.setSelectedSerialPort(serialPort);} //Sets model serial port.

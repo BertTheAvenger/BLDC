@@ -3,6 +3,7 @@ import Serial.RXCommandEnums;
 import Serial.RXCommands.RXACK;
 import Serial.RXCommands.RXADDSHORTS;
 import Serial.RXCommands.RXNUMBERTEST;
+import Serial.RXCommands.RXTOTALDATA;
 import Serial.TXCommand;
 import com.fazecast.jSerialComm.*;
 
@@ -15,13 +16,7 @@ class SerialHandler {
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
-    private static Map<RXCommandEnums, RXCommand> rxCommandRegister;
-    static { //Populate RXCommand register.
-        rxCommandRegister = new HashMap<>();
-        rxCommandRegister.put(RXCommandEnums.ACK, new RXACK());
-        rxCommandRegister.put(RXCommandEnums.ADDSHORTS, new RXADDSHORTS());
-        rxCommandRegister.put(RXCommandEnums.NUMBERTEST, new RXNUMBERTEST());
-    }
+    private static RXCommand incomingCommand;
 
 
     private static boolean recievingPacket = false;
@@ -81,11 +76,9 @@ class SerialHandler {
         }
     }
 
-    static void buildPacket(byte inputByte)
+    static void buildPacket(byte b)
     {
         //System.out.println("Read byte: " + inputByte);
-        int b = Byte.toUnsignedInt(inputByte); //Allows math 0-255
-
         //System.out.println(b);
         if(!recievingPacket && b == 0) //Not recieving packet & new packet command recieved
         {
@@ -96,10 +89,11 @@ class SerialHandler {
         }
         else if(recievingPacket && packetIndex == 0) //Catch second overall byte, first byte which is recorded, which is command byte.
         {
-            packetLength = rxCommandRegister.get(RXCommandEnums.fromInt(b)).getLength(); //Get corrosponding command object length.
+            incomingCommand = RXCommandEnums.commandFromByte(b);
+            packetLength = incomingCommand.getLength(); //Get corrosponding command object length.
             packet = new byte[packetLength]; //Init packet array with this length
 
-            packet[packetIndex] = inputByte; //Record first byte.
+            packet[packetIndex] = b; //Record first byte.
             packetIndex++;
 
             if(packetLength == 1) //First byte is also last, check.
@@ -111,12 +105,12 @@ class SerialHandler {
         }
         else if(recievingPacket && packetIndex < packetLength - 1) //If recieving and in range, just keep adding the bytes.
         {
-            packet[packetIndex] = inputByte; //Record first byte.
+            packet[packetIndex] = b; //Record first byte.
             packetIndex++;
         }
         else if(recievingPacket)//Recieving last byte, Packet is finished, analyze.
         {
-            packet[packetIndex] = inputByte; //Record first byte.
+            packet[packetIndex] = b; //Record first byte.
             recievingPacket = false;
             recieveSerialCommand(packet); //Parse commands,
         }
@@ -126,10 +120,9 @@ class SerialHandler {
 
     static void recieveSerialCommand(byte[] packet)
     {
-        RXCommand command = rxCommandRegister.get(RXCommandEnums.fromByte(packet[0])); //Get relevant command.
-        command.setBytes(packet);
-        System.out.println("RECIEVED: " + command.toReadableString());
-        eventTriggered(command);
+        incomingCommand.setBytes(packet);
+        System.out.println("RECIEVED: " + incomingCommand.toReadableString());
+        eventTriggered(incomingCommand);
 
     }
 

@@ -6,8 +6,8 @@ public class MvcView {
     private static final int startingHeight = 400;
     private static final int startingWidth = 600;
 
-    private static MvcViewJMenuBar menuBar;
-    private static MvcMainPanel mainPanel;
+    private static GViewJMenuBar menuBar;
+    private static GMainPanel mainPanel;
 
     private
     //Serial menuBar components
@@ -35,10 +35,10 @@ public class MvcView {
         JFrame frame = new JFrame();
         //frame.setJMenuBar(constructJMB());
 
-        menuBar = new MvcViewJMenuBar();
+        menuBar = new GViewJMenuBar();
         frame.setJMenuBar(menuBar);
 
-        mainPanel = new MvcMainPanel();
+        mainPanel = new GMainPanel();
         mainPanel.setPreferredSize(new Dimension(500,500));
         frame.setContentPane(mainPanel);
         frame.setMinimumSize(new Dimension(800,600));

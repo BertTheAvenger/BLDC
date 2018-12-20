@@ -4,10 +4,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class MvcGraphHolder extends JPanel {
+public class GGraphHolder extends JPanel {
 
     MvcAngleGraph angleGraph;
-    MvcGraphHolder()
+    GGraphHolder()
     {
         super(new GridBagLayout());
         setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10,10,10,10), new TitledBorder(new LineBorder(Color.GRAY, 1), "Graphs")));

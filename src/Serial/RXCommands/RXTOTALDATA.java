@@ -5,16 +5,16 @@ import Serial.RXCommandEnums;
 
 import java.nio.ByteBuffer;
 
-public class RXADDSHORTS implements RXCommand { //CMDBYTE 3
+public class RXTOTALDATA implements RXCommand { //CMDBYTE 5
     //Form
     //{3, high int, int, int, low int} //Big-endian.
     private int result; //Cast from int
-    public RXADDSHORTS()
+    public RXTOTALDATA()
     {
        result = 0;
     }
 
-    public RXADDSHORTS(byte[] commandBytes)
+    public RXTOTALDATA(byte[] commandBytes)
     {
         result = 0;
         setBytes(commandBytes);
@@ -36,7 +36,7 @@ public class RXADDSHORTS implements RXCommand { //CMDBYTE 3
 
     @Override
     public String toReadableString() {
-        return "ADDINT - int: " + result;
+        return "TOTAL DATA: " + result;
     }
 
     @Override
