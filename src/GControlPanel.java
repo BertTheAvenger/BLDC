@@ -6,6 +6,7 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
 
     private serialStatusIndicator serialStatusIndicator;
     private GCPMotor motorControlPanel;
+    private GCPCalibration calibrationPanel;
     public GControlPanel()
     {
         super();
@@ -18,6 +19,9 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
 
         motorControlPanel = new GCPMotor();
         add(motorControlPanel);
+
+        calibrationPanel = new GCPCalibration();
+        add(calibrationPanel);
 
     }
     public void setSerialStatus(int serialStatus){serialStatusIndicator.setSerialStatus(serialStatus);}

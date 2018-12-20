@@ -29,8 +29,10 @@ public class HardwareDriver {
             case NUMBERTEST:
                 break;
         }
+    }
 
-
-
+    static void startCalibration()
+    {
+        System.out.println("Calibration Starting!");
     }
 }
