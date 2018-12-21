@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 class HardwareDriver {
-    private static byte[] sinArr;
+    private static int[] sinArr;
 
     private static Timer calibrationTimer;
 
@@ -24,11 +24,13 @@ class HardwareDriver {
     {
         //Bind event handler.
         SerialHandler.addListener(HardwareDriver::serialEvent); //Bind serial command event listener.
-        sinArr = new byte[sinWaveResolution];
-        for(int i = 0; i < sinArr.length; i++)
+        sinArr = new int[sinWaveResolution];
+        for(int i = 0; i < sinArr.length; i++) //Init stock sin array with a wave.
         {
-            sinArr[i] = (byte)(127 + 127*Math.sin((2.0*Math.PI*i)/sinWaveResolution));
+            sinArr[i] = (int)(127 + 127*Math.sin(2.0*Math.PI*((double)i/sinWaveResolution)));
+            System.out.println(sinArr[i]);
         }
+        MvcView.setSinWave(sinArr);
 
     }
 

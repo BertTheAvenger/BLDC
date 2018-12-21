@@ -6,14 +6,15 @@ import java.awt.*;
 
 public class GGraphHolder extends JPanel {
 
-    MvcAngleGraph angleGraph;
+    GAngleGraph angleGraph;
+    GWaveGraph waveGraph;
     GGraphHolder()
     {
         super(new GridBagLayout());
         setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10,10,10,10), new TitledBorder(new LineBorder(Color.GRAY, 1), "Graphs")));
         GridBagConstraints c = new GridBagConstraints();
 
-        angleGraph = new MvcAngleGraph();
+        angleGraph = new GAngleGraph();
         //angleGraph.setBorder(new EmptyBorder(10,10,10,10));
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
@@ -23,11 +24,14 @@ public class GGraphHolder extends JPanel {
         add(angleGraph, c);
 
         c.gridy = 1;
-        add(new JPanel(), c);
+        waveGraph = new GWaveGraph();
+        add(waveGraph, c);
 
         c.gridy = 2;
         add(new JPanel(), c);
 
     }
+
+    void setSinWave(int[] sinArr){waveGraph.setSinWave(sinArr);}
 
 }
