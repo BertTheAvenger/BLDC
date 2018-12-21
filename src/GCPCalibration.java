@@ -1,4 +1,3 @@
-import javax.activation.DataHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -36,7 +35,7 @@ class GCPCalibration extends JPanel //GUI Motor Control Panel. Used by GControlP
             }
 
         };
-        return new JPanel();
+        return panel;
     }
 
 

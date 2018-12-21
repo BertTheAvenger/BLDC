@@ -122,8 +122,11 @@ class SerialHandler {
     }
 
     static void sendSerialCommand(TXCommand command){
-        sendBuffer.add(command);
-        attemptNextSend(); //Attempt to send. If waiting on ACK might be delayed
+        if(serialStatus)
+        {
+            sendBuffer.add(command); //Add command to buffer to send
+            attemptNextSend(); //Attempt to send. If waiting on ACK might be delayed
+        }
     }
 
     static void attemptNextSend()

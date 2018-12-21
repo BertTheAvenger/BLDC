@@ -1,19 +1,34 @@
 import Serial.RXCommand;
 import Serial.TXCommands.*;
 
-public class HardwareDriver {
-    private int controlMode = 0;
+import java.util.Timer;
+import java.util.TimerTask;
 
-    public static void init()
+class HardwareDriver {
+    private static byte[] sinArr;
+
+    private static Timer calibrationTimer;
+
+    private static int encoderStepsPerPhase = 600; //Integrate with model eventually!
+    private static int sinWaveResolution = 48; //Integrate with model eventually!
+
+    private static int calibrationStepDelay = 1000;
+
+    private static int totalPhaseLoops = 1;
+
+    private static int controlMode = 0;
+
+    private static int currentPhaseStep = 0;
+
+    static void init()
     {
-        SerialHandler.addListener(new SerialEventListener() { //Bind event handler.
-            @Override
-            public void serialEvent(RXCommand event) {
-                HardwareDriver.serialEvent(event);
-            }
-        });
-
-
+        //Bind event handler.
+        SerialHandler.addListener(HardwareDriver::serialEvent); //Bind serial command event listener.
+        sinArr = new byte[sinWaveResolution];
+        for(int i = 0; i < sinArr.length; i++)
+        {
+            sinArr[i] = (byte)(127 + 127*Math.sin((2.0*Math.PI*i)/sinWaveResolution));
+        }
 
     }
 
@@ -31,15 +46,38 @@ public class HardwareDriver {
         }
     }
 
+    static void incrementCalibration()
+    {
+
+        currentPhaseStep++;
+    }
+
+
     static void startCalibration()
     {
         System.out.println("Calibration Starting!");
-        //SerialHandler.sendSerialCommand(new TXACK());
-        SerialHandler.sendSerialCommand(new TXSETMODE((byte)1));
-        //SerialHandler.sendSerialCommand(new TXTOTALDATA());
-        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)1, (byte)255));
-        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)2, (byte)255));
-        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)3, (byte)0));
 
+        currentPhaseStep = 0;
+        calibrationTimer = new Timer();
+        SerialHandler.sendSerialCommand(new TXSETMODE((byte)1));
+        calibrationTimer.schedule(new TimerTask() { //Init calibration timer.
+            @Override
+            public void run() {
+                incrementCalibration();
+            }
+        }, 0, calibrationStepDelay);
+
+
+
+
+    }
+
+    static void stopCalibration()
+    {
+        calibrationTimer.cancel();
+    }
+
+    static void setEncoderSteps(int steps){
+        encoderStepsPerPhase = steps;
     }
 }
