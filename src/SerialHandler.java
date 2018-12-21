@@ -1,9 +1,5 @@
 import Serial.RXCommand;
 import Serial.RXCommandEnums;
-import Serial.RXCommands.RXACK;
-import Serial.RXCommands.RXADDSHORTS;
-import Serial.RXCommands.RXNUMBERTEST;
-import Serial.RXCommands.RXTOTALDATA;
 import Serial.TXCommand;
 import com.fazecast.jSerialComm.*;
 
@@ -13,11 +9,9 @@ class SerialHandler {
     private static final int[] baudrates = {9600, 115200};
     private static SerialPort port;
     private static boolean serialStatus = false;
-
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private static ArrayList<TXCommand> sendBuffer;
 
     private static RXCommand incomingCommand;
-
 
     private static boolean recievingPacket = false;
     private static byte[] packet;
@@ -40,6 +34,7 @@ class SerialHandler {
         port = SerialPort.getCommPort(portName);
         if(port.openPort()) {
             serialStatus = true;
+            sendBuffer = new ArrayList<>();
             port.addDataListener(new SerialPortDataListener() {
                 @Override
                 public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
@@ -127,30 +122,34 @@ class SerialHandler {
     }
 
     static void sendSerialCommand(TXCommand command){
+        sendBuffer.add(command);
+        attemptNextSend(); //Attempt to send. If waiting on ACK might be delayed
+    }
+
+    static void attemptNextSend()
+    {
         if(serialStatus && port.isOpen())
         {
-            System.out.println("SENDING: " + command.toReadableString());
-            byte[] outBuffer = new byte[command.getLength() + 1];
+            if(!waitingOnAck && sendBuffer.size() > 0) //If not waiting and buffer is not empty, send.
+            {
+                TXCommand command = sendBuffer.get(0); //Get oldest command.
+                sendBuffer.remove(0);
+                waitingOnAck = command.requireAck();
+                System.out.println("SENDING: " + command.toReadableString());
+                byte[] outBuffer = new byte[command.getLength() + 1];
 
-            outBuffer[0] = 0;
-            System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getLength()); //Append command to end of buffer
+                outBuffer[0] = 0;
+                System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getLength()); //Append command to end of buffer
+                System.out.println(Arrays.toString(outBuffer));
 
-            port.writeBytes(outBuffer, outBuffer.length);
+                port.writeBytes(outBuffer, outBuffer.length);
+            }
+
         }
         else
         {
             MvcController.serialDisconnectActionPreformed();
         }
-    }
-
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
     }
 
     public static void addListener(SerialEventListener listener)
@@ -160,6 +159,10 @@ class SerialHandler {
 
     private static void eventTriggered(RXCommand command)
     {
+        if(command.getCommand() == RXCommandEnums.ACK) { //Ack received
+            waitingOnAck = false; //Not waiting anymore
+            attemptNextSend(); //Try to send next in buffer.
+        }
         for(SerialEventListener l : listeners)
         {
             l.serialEvent(command);

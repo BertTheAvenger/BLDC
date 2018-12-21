@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
 {
-    private int CommandByte = 4;
+    private byte CommandByte = 4;
     private byte mode;
     //Mode 0 is off.
     //Mode 1 is default mode. Arduino uses hardcoded sin wave, controls are sent by this program. Status values need to
@@ -14,27 +14,27 @@ public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
     //Mode 2 is external drive mode.
     //Mode 3 is calibration mode. Client sends phase values, Arduino returns V, A, and Angle.
 
-    public TXSETMODE(int mode)
+    public TXSETMODE(byte mode)
     {
-        this.mode = (byte) mode;
+        this.mode = mode;
     }
 
     @Override
-    public int getCommandByte() {
+    public byte getCommandByte() {
         return CommandByte;
     }
 
     @Override
     public byte[] getByteArray() {
         byte[] buffer = new byte[getLength()];
-        buffer[0] = (byte)getCommandByte();
+        buffer[0] = getCommandByte();
         buffer[1] = mode;
         return buffer;
     }
 
     @Override
     public boolean requireAck() {
-        return false;
+        return true;
     }
 
     @Override

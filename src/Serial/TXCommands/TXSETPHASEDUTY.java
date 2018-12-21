@@ -19,7 +19,7 @@ public class TXSETPHASEDUTY implements TXCommand
     }
 
     @Override
-    public int getCommandByte() {
+    public byte getCommandByte() {
         return CommandByte;
     }
 

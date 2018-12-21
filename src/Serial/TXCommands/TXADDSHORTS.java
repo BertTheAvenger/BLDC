@@ -3,12 +3,10 @@ package Serial.TXCommands;
 import Serial.TXCommand;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON THE ARDUINO, and returns an int.
 {
-    private int CommandByte = 3;
+    private byte CommandByte = 3;
     private short a;
     private short b;
 
@@ -19,14 +17,14 @@ public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON T
     }
 
     @Override
-    public int getCommandByte() {
+    public byte getCommandByte() {
         return CommandByte;
     }
 
     @Override
     public byte[] getByteArray() {
         byte[] buffer = new byte[getLength()];
-        buffer[0] = (byte)getCommandByte();
+        buffer[0] = getCommandByte();
 
         byte[] aOut = ByteBuffer.allocate(2).putShort(a).array(); //Create array for our int.
         //System.out.println(Arrays.toString(aOut));

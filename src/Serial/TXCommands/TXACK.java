@@ -7,7 +7,7 @@ public class TXACK implements TXCommand
     private byte CommandByte = 1;
 
     @Override
-    public int getCommandByte() {
+    public byte getCommandByte() {
         return CommandByte;
     }
 
@@ -19,7 +19,7 @@ public class TXACK implements TXCommand
 
     @Override
     public boolean requireAck() {
-        return false;
+        return true;
     }
 
     @Override

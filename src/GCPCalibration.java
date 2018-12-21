@@ -16,7 +16,7 @@ class GCPCalibration extends JPanel //GUI Motor Control Panel. Used by GControlP
         inputPanel = createInputPanel();
         add(inputPanel);
 
-        add(new JButton(new AbstractAction("Start Calibration") { //Start Calibration button.
+        add(new JButton(new AbstractAction("Start") { //Start Calibration button.
             @Override
             public void actionPerformed(ActionEvent e) {
                 HardwareDriver.startCalibration();

@@ -11,7 +11,7 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
     {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); //Align inner panels vertically.
-        setBorder(new TitledBorder("Controls"));
+        //setBorder(new TitledBorder("Controls"));
         setPreferredSize(new Dimension(300,0));
         serialStatusIndicator = new serialStatusIndicator();
         //serialStatusIndicator.setAlignmentX(Component.CENTER_ALIGNMENT);

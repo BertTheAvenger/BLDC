@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 
 public class RXTOTALDATA implements RXCommand { //CMDBYTE 5
     //Form
-    //{3, high int, int, int, low int} //Big-endian.
+    //{5, high long, long, long, low long, high int, low int, high int, low int } <CMDbyte, Encoder raw, amperage raw, voltage raw>
     private int result; //Cast from int
     public RXTOTALDATA()
     {

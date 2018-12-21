@@ -1,4 +1,5 @@
 import Serial.RXCommand;
+import Serial.TXCommands.*;
 
 public class HardwareDriver {
     private int controlMode = 0;
@@ -24,7 +25,6 @@ public class HardwareDriver {
             case ADDSHORTS:
                 break;
             case TOTALDATA:
-
                 break;
             case NUMBERTEST:
                 break;
@@ -34,5 +34,12 @@ public class HardwareDriver {
     static void startCalibration()
     {
         System.out.println("Calibration Starting!");
+        //SerialHandler.sendSerialCommand(new TXACK());
+        SerialHandler.sendSerialCommand(new TXSETMODE((byte)1));
+        //SerialHandler.sendSerialCommand(new TXTOTALDATA());
+        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)1, (byte)100));
+        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)2, (byte)100));
+        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)3, (byte)0));
+
     }
 }
