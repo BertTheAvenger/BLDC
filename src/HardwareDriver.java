@@ -37,8 +37,8 @@ public class HardwareDriver {
         //SerialHandler.sendSerialCommand(new TXACK());
         SerialHandler.sendSerialCommand(new TXSETMODE((byte)1));
         //SerialHandler.sendSerialCommand(new TXTOTALDATA());
-        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)1, (byte)100));
-        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)2, (byte)100));
+        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)1, (byte)255));
+        SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)2, (byte)255));
         SerialHandler.sendSerialCommand(new TXSETPHASEDUTY((byte)3, (byte)0));
 
     }
