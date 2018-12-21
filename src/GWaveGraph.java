@@ -1,7 +1,9 @@
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -46,6 +48,10 @@ class GWaveGraph extends JPanel
         chart.getXYPlot().getRangeAxis().setLabelFont(axisFont);
         chart.getTitle().setFont(titleFont);
 
+        ValueMarker val = new ValueMarker(25);
+        val.setPaint(Color.red);
+
+        chart.getXYPlot().addDomainMarker(val);
         //Set domain and range
         //chart.getXYPlot().getDomainAxis().setAutoRange(false);
         //chart.getXYPlot().getDomainAxis().setRange(new Range(0,2400));
@@ -63,10 +69,6 @@ class GWaveGraph extends JPanel
         add(chartPanel);
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
     public void setSinWave(int[] sinWave)
     {
         collection.removeSeries(Aphase);
