@@ -69,6 +69,8 @@ class HardwareDriver {
         }, 0, calibrationStepDelay);
         */
         SerialHandler.sendSerialCommand(new TXACK());
+        SerialHandler.sendSerialCommand(new TXACK());
+        SerialHandler.sendSerialCommand(new TXACK());
 
 
 

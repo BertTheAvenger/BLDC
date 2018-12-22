@@ -7,22 +7,8 @@ import java.nio.ByteBuffer;
 
 public class RXADDSHORTS extends RXCommand {
     private int result; //Cast from int
-    private byte commandByte;
-    private int commandLength;
 
-    public RXADDSHORTS()
-    {
-        this.commandLength = getCommandEnum().getCommandLength();
-        this.commandByte = getCommandEnum().getCommandByte();
-    }
-
-    @Override
-    public byte getCommandByte() { return this.commandByte; }
-
-    @Override
-    public int getCommandLength() { return this.commandLength; }
-
-    public static RXEnums getCommandEnum() {
+    public RXEnums getCommandEnum() {
         return RXEnums.ADDSHORTS;
     }
 

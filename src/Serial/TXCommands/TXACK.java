@@ -1,34 +1,23 @@
 package Serial.TXCommands;
 
 import Serial.TXCommand;
+import Serial.TXEnums;
 
-public class TXACK implements TXCommand
+public class TXACK extends TXCommand
 {
-    private byte CommandByte = 1;
-
-    @Override
-    public byte getCommandByte() {
-        return CommandByte;
-    }
-
     @Override
     public byte[] getByteArray() {
 
-        return new byte[]{CommandByte};
+        return new byte[]{getCommandByte()};
     }
 
     @Override
-    public boolean requireAck() {
-        return true;
+    public TXEnums getCommandEnum() {
+        return TXEnums.ACK;
     }
 
     @Override
     public String toReadableString() {
         return "ACK";
-    }
-
-    @Override
-    public int getCommandLength() {
-        return 1;
     }
 }

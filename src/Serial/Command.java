@@ -6,4 +6,8 @@ public interface Command {
      int getCommandLength();
     //returns total command length in bytes, including command itself.
     // EX {1} (handshake command) returns 1, {2, 0, 255} (Setphase) returns 3.
+
+    byte getCommandByte();
+
+
 }

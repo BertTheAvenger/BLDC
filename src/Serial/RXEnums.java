@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 public enum RXEnums { //Defines relationships between Enum, Actual class, command lengths and command bytes in one place for simplicity.
     ACK(1, RXACK.class, 1),
-    //{cmd, byte} <cmd>
+    //{cmd} <cmd>
     //Acknowledgement of completed command. Certain TX commands will wait for this before proceeding.
 
     ERROR(2, RXERROR.class, 2),
@@ -26,7 +26,7 @@ public enum RXEnums { //Defines relationships between Enum, Actual class, comman
 
 
     private byte commandByte;
-    private Class commandClass;
+    private Class<?> commandClass;
     private int commandLength;
 
     RXEnums(int commandByte, Class commandClass, int commandLength) {
@@ -52,8 +52,6 @@ public enum RXEnums { //Defines relationships between Enum, Actual class, comman
         return commandLength;
     }
 
-    public String getStr(){return "KSENFGIK";}
-
     public static RXEnums byteToEnum(byte cmdByte)
     {
         RXEnums[] enums = RXEnums.values();
@@ -67,13 +65,9 @@ public enum RXEnums { //Defines relationships between Enum, Actual class, comman
     public static RXCommand byteToCommand(byte cmdByte)
     {
         RXEnums[] enums = RXEnums.values();
-        for(int i = 0; i < enums.length; i++)
-        {
-            if(enums[i].getCommandByte() == cmdByte)
-            {
-                System.out.println(enums[i].getCommand().toReadableString());
-                return enums[i].getCommand();
-            }
+        for(RXEnums e : enums) {
+            if(e.getCommandByte() == cmdByte)
+            { return e.getCommand(); }
         }
         return null;
     }

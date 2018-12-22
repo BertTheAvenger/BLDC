@@ -5,21 +5,21 @@ import Serial.RXEnums;
 import Serial.TXCommand;
 import Serial.TXEnums;
 
-public class TXTOTALDATA extends TXCommand
+public class TXERROR extends TXCommand
 {
     @Override
     public byte[] getByteArray() {
+
         return new byte[]{getCommandByte()};
     }
 
     @Override
     public TXEnums getCommandEnum() {
-        return TXEnums.TOTALDATA;
+        return TXEnums.ACK;
     }
 
     @Override
     public String toReadableString() {
-        return "REQUEST ALL DATA";
+        return "ACK";
     }
-
 }

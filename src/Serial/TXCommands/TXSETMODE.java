@@ -1,10 +1,11 @@
 package Serial.TXCommands;
 
+import Serial.RXCommand;
 import Serial.TXCommand;
+import Serial.TXEnums;
 
-public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
+public class TXSETMODE extends TXCommand //Sends mode to enter to Arduino.
 {
-    private byte CommandByte = 4;
     private byte mode;
     //Mode 0 is off.
     //Mode 1 is default mode. Arduino uses hardcoded sin wave, controls are sent by this program. Status values need to
@@ -14,12 +15,8 @@ public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
 
     public TXSETMODE(byte mode)
     {
+        super();
         this.mode = mode;
-    }
-
-    @Override
-    public byte getCommandByte() {
-        return CommandByte;
     }
 
     @Override
@@ -31,8 +28,8 @@ public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
     }
 
     @Override
-    public boolean requireAck() {
-        return true;
+    public TXEnums getCommandEnum() {
+        return TXEnums.SETMODE;
     }
 
     @Override
@@ -40,8 +37,4 @@ public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
         return "SETMODE: " + Byte.toUnsignedInt(mode);
     }
 
-    @Override
-    public int getCommandLength() {
-        return 2;
-    }
 }

@@ -1,28 +1,25 @@
 package Serial.TXCommands;
 
+import Serial.RXCommand;
 import Serial.TXCommand;
+import Serial.TXEnums;
 
 import java.util.Arrays;
 
 //TXCommand 4 bytes.
 //1st byte is phase # (1-3), second is byte representing PWM power to apply.
-public class TXSETALLPHASEDUTY implements TXCommand
+public class TXSETALLPHASEDUTIES extends TXCommand
 {
-    private byte CommandByte = 6;
     private byte[] pwms; //0 - 255 for PWM.
 
-    public TXSETALLPHASEDUTY(byte pwm1, byte pwm2, byte pwm3)
+    public TXSETALLPHASEDUTIES(byte pwm1, byte pwm2, byte pwm3)
     {
+        super();
         this.pwms = new byte[3]; //3 phases
         this.pwms[0] = pwm1;
         this.pwms[1] = pwm2;
         this.pwms[2] = pwm3;
 
-    }
-
-    @Override
-    public byte getCommandByte() {
-        return CommandByte;
     }
 
     @Override
@@ -38,17 +35,12 @@ public class TXSETALLPHASEDUTY implements TXCommand
     }
 
     @Override
-    public boolean requireAck() {
-        return false;
+    public TXEnums getCommandEnum() {
+        return TXEnums.SETALLPHASEDUTIES;
     }
 
     @Override
     public String toReadableString() {
         return "PHASES TO: " + Arrays.toString(pwms);
-    }
-
-    @Override
-    public int getCommandLength() {
-        return 4;
     }
 }

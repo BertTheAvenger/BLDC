@@ -5,25 +5,11 @@ import Serial.RXEnums;
 
 public class RXACK extends RXCommand {
 
-    private byte commandByte;
-    private int commandLength;
-    public RXACK()
-    {
-        this.commandLength = getCommandEnum().getCommandLength();
-        this.commandByte = getCommandEnum().getCommandByte();
-    }
-
-    @Override
-    public byte getCommandByte() { return this.commandByte; }
-
-    @Override
-    public int getCommandLength() { return this.commandLength; }
-
     @Override
     public void parseBytes(byte[] commandBytes) {
     }
 
-    public static RXEnums getCommandEnum() {
+    public  RXEnums getCommandEnum() {
         return RXEnums.ACK;
     }
 

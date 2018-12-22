@@ -18,7 +18,7 @@ class SerialHandler {
     private static int packetIndex = 0;
     private static int packetLength = 0;
 
-    private static boolean waitingOnAck = false;
+    private static RXEnums ackCommand;
 
     private static List<SerialEventListener> listeners = new ArrayList<>();
 
@@ -29,7 +29,7 @@ class SerialHandler {
 
     static int[] getAvailableBaudrates(){return baudrates;}
 
-    static boolean openSerialConnection(String portName, int baudRate)
+    static boolean openSerialConnection(String portName)
     {
         port = SerialPort.getCommPort(portName);
         if(port.openPort()) {
@@ -71,7 +71,7 @@ class SerialHandler {
         }
     }
 
-    static void buildPacket(byte b)
+    private static void buildPacket(byte b)
     {
         //System.out.println("Read byte: " + inputByte);
         //System.out.println(b);
@@ -85,18 +85,27 @@ class SerialHandler {
         else if(recievingPacket && packetIndex == 0) //Catch second overall byte, first byte which is recorded, which is command byte.
         {
             incomingCommand = RXEnums.byteToCommand(b);
-            packetLength = incomingCommand.getCommandLength(); //Get corrosponding command object length.
-            packet = new byte[packetLength]; //Init packet array with this length
-
-            packet[packetIndex] = b; //Record first byte.
-            packetIndex++;
-
-            if(packetLength == 1) //First byte is also last, check.
+            if(incomingCommand != null) //Make sure command was found.
             {
+                packetLength = incomingCommand.getCommandLength(); //Get corrosponding command object length.
+                packet = new byte[packetLength]; //Init packet array with this length
 
-                recievingPacket = false;
-                recieveSerialCommand(packet); //Parse commands,
+                packet[packetIndex] = b; //Record first byte.
+                packetIndex++;
+
+                if(packetLength == 1) //First byte is also last, check.
+                {
+
+                    recievingPacket = false;
+                    recieveSerialCommand(packet); //Parse commands,
+                }
             }
+            else //Command for byte not found:
+            {
+                System.out.println("PACKET RECEIVE ERROR - COMMAND NOT FOUND!");
+                recievingPacket = false; //Cancel packet.
+            }
+
         }
         else if(recievingPacket && packetIndex < packetLength - 1) //If recieving and in range, just keep adding the bytes.
         {
@@ -113,7 +122,7 @@ class SerialHandler {
 
     }
 
-    static void recieveSerialCommand(byte[] packet)
+    private static void recieveSerialCommand(byte[] packet)
     {
         incomingCommand.parseBytes(packet);
         System.out.println("RECIEVED: " + incomingCommand.toReadableString());
@@ -129,21 +138,21 @@ class SerialHandler {
         }
     }
 
-    static void attemptNextSend()
+    private static void attemptNextSend()
     {
         if(serialStatus && port.isOpen())
         {
-            if(!waitingOnAck && sendBuffer.size() > 0) //If not waiting and buffer is not empty, send.
+            if(ackCommand == null && sendBuffer.size() > 0) //If ACK command is nonexistant and buffer is not empty, send.
             {
                 TXCommand command = sendBuffer.get(0); //Get oldest command.
                 sendBuffer.remove(0);
-                waitingOnAck = command.requireAck();
+                ackCommand = command.getAckCommand();
                 System.out.println("SENDING: " + command.toReadableString());
                 byte[] outBuffer = new byte[command.getCommandLength() + 1];
 
                 outBuffer[0] = 0;
                 System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getCommandLength()); //Append command to end of buffer
-                System.out.println(Arrays.toString(outBuffer));
+                //System.out.println(Arrays.toString(outBuffer));
 
                 port.writeBytes(outBuffer, outBuffer.length);
             }
@@ -155,15 +164,16 @@ class SerialHandler {
         }
     }
 
-    public static void addListener(SerialEventListener listener)
+    static void addListener(SerialEventListener listener)
     {
         listeners.add(listener);
     }
 
     private static void eventTriggered(RXCommand command)
     {
-        if(command.getCommandEnum() == RXEnums.ACK) { //Ack received
-            waitingOnAck = false; //Not waiting anymore
+        if(command.getCommandEnum() == ackCommand) { //Ack received
+            System.out.println("ACK RECEIVED!");
+            ackCommand = null; //Not waiting anymore
             attemptNextSend(); //Try to send next in buffer.
         }
         for(SerialEventListener l : listeners)
