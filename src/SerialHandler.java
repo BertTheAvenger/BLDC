@@ -1,5 +1,5 @@
 import Serial.RXCommand;
-import Serial.RXCommandEnums;
+import Serial.RXEnums;
 import Serial.TXCommand;
 import com.fazecast.jSerialComm.*;
 
@@ -84,8 +84,8 @@ class SerialHandler {
         }
         else if(recievingPacket && packetIndex == 0) //Catch second overall byte, first byte which is recorded, which is command byte.
         {
-            incomingCommand = RXCommandEnums.commandFromByte(b);
-            packetLength = incomingCommand.getLength(); //Get corrosponding command object length.
+            incomingCommand = RXEnums.byteToCommand(b);
+            packetLength = incomingCommand.getCommandLength(); //Get corrosponding command object length.
             packet = new byte[packetLength]; //Init packet array with this length
 
             packet[packetIndex] = b; //Record first byte.
@@ -115,7 +115,7 @@ class SerialHandler {
 
     static void recieveSerialCommand(byte[] packet)
     {
-        incomingCommand.setBytes(packet);
+        incomingCommand.parseBytes(packet);
         System.out.println("RECIEVED: " + incomingCommand.toReadableString());
         eventTriggered(incomingCommand);
 
@@ -139,10 +139,10 @@ class SerialHandler {
                 sendBuffer.remove(0);
                 waitingOnAck = command.requireAck();
                 System.out.println("SENDING: " + command.toReadableString());
-                byte[] outBuffer = new byte[command.getLength() + 1];
+                byte[] outBuffer = new byte[command.getCommandLength() + 1];
 
                 outBuffer[0] = 0;
-                System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getLength()); //Append command to end of buffer
+                System.arraycopy(command.getByteArray(), 0, outBuffer, 1, command.getCommandLength()); //Append command to end of buffer
                 System.out.println(Arrays.toString(outBuffer));
 
                 port.writeBytes(outBuffer, outBuffer.length);
@@ -162,7 +162,7 @@ class SerialHandler {
 
     private static void eventTriggered(RXCommand command)
     {
-        if(command.getCommand() == RXCommandEnums.ACK) { //Ack received
+        if(command.getCommandEnum() == RXEnums.ACK) { //Ack received
             waitingOnAck = false; //Not waiting anymore
             attemptNextSend(); //Try to send next in buffer.
         }

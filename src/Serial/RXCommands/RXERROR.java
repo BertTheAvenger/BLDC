@@ -3,14 +3,13 @@ package Serial.RXCommands;
 import Serial.RXCommand;
 import Serial.RXEnums;
 
-import java.nio.ByteBuffer;
+public class RXERROR implements RXCommand {
 
-public class RXADDSHORTS implements RXCommand {
-    private int result; //Cast from int
     private byte commandByte;
+
     private int commandLength;
 
-    public RXADDSHORTS()
+    public RXERROR()
     {
         this.commandLength = getCommandEnum().getCommandLength();
         this.commandByte = getCommandEnum().getCommandByte();
@@ -22,20 +21,17 @@ public class RXADDSHORTS implements RXCommand {
     @Override
     public int getCommandLength() { return this.commandLength; }
 
-    public RXEnums getCommandEnum() {
-        return RXEnums.ADDSHORTS;
+    @Override
+    public void parseBytes(byte[] commandBytes) {
     }
 
-    public void parseBytes(byte[] commandBytes)
-    {
-       //1 - 2 int, 3 - 6 long, 7 - 10 double.
-        this.result = ByteBuffer.wrap(commandBytes, 1, 4).getInt();
+    @Override
+    public RXEnums getCommandEnum() {
+        return RXEnums.ERROR;
     }
 
     @Override
     public String toReadableString() {
-        return "ADDINT - int: " + result;
+        return "ERROR: ";
     }
-
-    public int getResult(){return result;}
 }

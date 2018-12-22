@@ -28,7 +28,7 @@ public class TXSETALLPHASEDUTY implements TXCommand
     @Override
     public byte[] getByteArray() {
 
-        byte[] buffer = new byte[getLength()];
+        byte[] buffer = new byte[getCommandLength()];
         buffer[0] = getCommandByte();
         buffer[1] = pwms[0];
         buffer[2] = pwms[1];
@@ -48,7 +48,7 @@ public class TXSETALLPHASEDUTY implements TXCommand
     }
 
     @Override
-    public int getLength() {
+    public int getCommandLength() {
         return 4;
     }
 }

@@ -36,14 +36,12 @@ class HardwareDriver {
 
     private static void serialEvent(RXCommand command)
     {
-        switch(command.getCommand()){
+        switch(command.getCommandEnum()){
             case ACK:
                 break;
             case ADDSHORTS:
                 break;
             case TOTALDATA:
-                break;
-            case NUMBERTEST:
                 break;
         }
     }
@@ -58,6 +56,7 @@ class HardwareDriver {
     static void startCalibration()
     {
         System.out.println("Calibration Starting!");
+        /*
 
         currentPhaseStep = 0;
         calibrationTimer = new Timer();
@@ -68,7 +67,8 @@ class HardwareDriver {
                 incrementCalibration();
             }
         }, 0, calibrationStepDelay);
-
+        */
+        SerialHandler.sendSerialCommand(new TXACK());
 
 
 

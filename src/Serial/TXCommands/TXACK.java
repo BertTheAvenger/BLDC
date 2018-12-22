@@ -28,7 +28,7 @@ public class TXACK implements TXCommand
     }
 
     @Override
-    public int getLength() {
+    public int getCommandLength() {
         return 1;
     }
 }

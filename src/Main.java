@@ -15,6 +15,9 @@ public class Main {
 
         MvcController.passObjects(new MvcModel());
         MvcController.startInterface();
+
+        SerialHandler.buildPacket((byte) 0);
+        SerialHandler.buildPacket((byte) 1);
     }
 
 }

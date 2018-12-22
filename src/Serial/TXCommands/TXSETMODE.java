@@ -2,8 +2,6 @@ package Serial.TXCommands;
 
 import Serial.TXCommand;
 
-import java.nio.ByteBuffer;
-
 public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
 {
     private byte CommandByte = 4;
@@ -26,7 +24,7 @@ public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
 
     @Override
     public byte[] getByteArray() {
-        byte[] buffer = new byte[getLength()];
+        byte[] buffer = new byte[getCommandLength()];
         buffer[0] = getCommandByte();
         buffer[1] = mode;
         return buffer;
@@ -43,7 +41,7 @@ public class TXSETMODE implements TXCommand //Sends mode to enter to Arduino.
     }
 
     @Override
-    public int getLength() {
+    public int getCommandLength() {
         return 2;
     }
 }

@@ -23,7 +23,7 @@ public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON T
 
     @Override
     public byte[] getByteArray() {
-        byte[] buffer = new byte[getLength()];
+        byte[] buffer = new byte[getCommandLength()];
         buffer[0] = getCommandByte();
 
         byte[] aOut = ByteBuffer.allocate(2).putShort(a).array(); //Create array for our int.
@@ -47,7 +47,7 @@ public class TXADDSHORTS implements TXCommand //Takes two shorts, adds them ON T
     }
 
     @Override
-    public int getLength() {
+    public int getCommandLength() {
         return 5;
     }
 }

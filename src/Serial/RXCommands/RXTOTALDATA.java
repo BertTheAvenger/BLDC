@@ -1,48 +1,40 @@
 package Serial.RXCommands;
 
 import Serial.RXCommand;
-import Serial.RXCommandEnums;
+import Serial.RXEnums;
 
 import java.nio.ByteBuffer;
 
-public class RXTOTALDATA implements RXCommand { //CMDBYTE 5
+public class RXTOTALDATA implements RXCommand {
     //Form
-    //{5, high long, long, long, low long, high int, low int, high int, low int } <CMDbyte, Encoder raw, amperage raw, voltage raw>
-    private int result; //Cast from int
+    private byte commandByte;
+    private int commandLength;
     public RXTOTALDATA()
     {
-       result = 0;
-    }
-
-    public RXTOTALDATA(byte[] commandBytes)
-    {
-        result = 0;
-        setBytes(commandBytes);
+        this.commandLength = getCommandEnum().getCommandLength();
+        this.commandByte = getCommandEnum().getCommandByte();
     }
 
     @Override
-    public void setBytes(byte[] commandBytes) { parseBytes(commandBytes);}
+    public byte getCommandByte() { return this.commandByte; }
 
     @Override
-    public RXCommandEnums getCommand() {
-        return RXCommandEnums.ADDSHORTS;
+    public int getCommandLength() { return this.commandLength; }
+
+    @Override
+    public void parseBytes(byte[] commandBytes) {
+
     }
 
-    public void parseBytes(byte[] commandBytes)
-    {
-       //1 - 2 int, 3 - 6 long, 7 - 10 double.
-        this.result = ByteBuffer.wrap(commandBytes, 1, 4).getInt();
+    @Override
+    public RXEnums getCommandEnum() {
+        return null;
     }
 
     @Override
     public String toReadableString() {
-        return "TOTAL DATA: " + result;
-    }
+        return null;
+    } //CMDBYTE 5
 
-    @Override
-    public int getLength() {
-        return 5;
-    }
 
-    public int getResult(){return result;}
 }
