@@ -8,35 +8,40 @@ import Serial.RXCommands.RXTOTALDATA;
 import java.util.concurrent.ExecutionException;
 
 public enum RXEnums { //Defines relationships between Enum, Actual class, command lengths and command bytes in one place for simplicity.
-    ACK(1, new RXACK(), 1),
+    ACK(1, RXACK.class, 1),
     //{cmd, byte} <cmd>
     //Acknowledgement of completed command. Certain TX commands will wait for this before proceeding.
 
-    ERROR(2, new RXERROR(), 2),
+    ERROR(2, RXERROR.class, 2),
     //{cmd, byte} <cmd, error byte>
     //An error on the HW side.
 
-    ADDSHORTS(3, new RXADDSHORTS(), 5),
+    ADDSHORTS(3, RXADDSHORTS.class, 5),
     //{cmd, high long, long, long, low long} <cmd, result>
     //Result of TXADDSHORTS command.
 
-    TOTALDATA(4, new RXTOTALDATA(), 9);
+    TOTALDATA(4, RXTOTALDATA.class, 9);
     //{cmd, high long, long, long, low long, high int, low int, high int, low int } <cmd, Encoder raw, amperage raw, voltage raw>
     //Returns various data about state of HW.
 
 
     private byte commandByte;
-    private RXCommand command;
+    private Class commandClass;
     private int commandLength;
 
-    RXEnums(int commandByte, RXCommand command, int commandLength) {
+    RXEnums(int commandByte, Class commandClass, int commandLength) {
         this.commandByte = (byte)commandByte;
-        this.command = command;
+        this.commandClass = commandClass;
         this.commandLength = commandLength;
     }
 
     public RXCommand getCommand() {
-        return command;
+        try {
+            return (RXCommand) commandClass.getDeclaredConstructor().newInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public byte getCommandByte() {

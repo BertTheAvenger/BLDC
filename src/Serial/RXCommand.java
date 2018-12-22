@@ -1,7 +1,8 @@
 package Serial;
 
-public interface RXCommand extends Command { //Interface for commands incoming from Arduino
-    byte getCommandByte();
-    void parseBytes(byte[] commandBytes);
-    RXEnums getCommandEnum();
+public abstract class RXCommand implements Command { //Interface for commands incoming from Arduino
+    public abstract byte getCommandByte();
+    public abstract int getCommandLength();
+    public abstract void parseBytes(byte[] commandBytes);
+    public static RXEnums getCommandEnum(){return RXEnums.ACK;}
 }

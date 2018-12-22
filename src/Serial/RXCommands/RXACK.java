@@ -3,13 +3,12 @@ package Serial.RXCommands;
 import Serial.RXCommand;
 import Serial.RXEnums;
 
-public class RXACK implements RXCommand {
+public class RXACK extends RXCommand {
 
     private byte commandByte;
     private int commandLength;
     public RXACK()
     {
-        System.out.println(RXEnums.ACK.getStr());
         this.commandLength = getCommandEnum().getCommandLength();
         this.commandByte = getCommandEnum().getCommandByte();
     }
@@ -24,8 +23,7 @@ public class RXACK implements RXCommand {
     public void parseBytes(byte[] commandBytes) {
     }
 
-    @Override
-    public RXEnums getCommandEnum() {
+    public static RXEnums getCommandEnum() {
         return RXEnums.ACK;
     }
 

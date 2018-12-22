@@ -5,7 +5,7 @@ import Serial.RXEnums;
 
 import java.nio.ByteBuffer;
 
-public class RXTOTALDATA implements RXCommand {
+public class RXTOTALDATA extends RXCommand {
     //Form
     private byte commandByte;
     private int commandLength;
@@ -26,8 +26,7 @@ public class RXTOTALDATA implements RXCommand {
 
     }
 
-    @Override
-    public RXEnums getCommandEnum() {
+    public static RXEnums getCommandEnum() {
         return null;
     }
 

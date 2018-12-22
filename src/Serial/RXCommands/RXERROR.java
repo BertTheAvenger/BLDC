@@ -3,7 +3,7 @@ package Serial.RXCommands;
 import Serial.RXCommand;
 import Serial.RXEnums;
 
-public class RXERROR implements RXCommand {
+public class RXERROR extends RXCommand {
 
     private byte commandByte;
 
@@ -25,8 +25,7 @@ public class RXERROR implements RXCommand {
     public void parseBytes(byte[] commandBytes) {
     }
 
-    @Override
-    public RXEnums getCommandEnum() {
+    public static RXEnums getCommandEnum() {
         return RXEnums.ERROR;
     }
 
