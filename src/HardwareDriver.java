@@ -1,8 +1,8 @@
 import Serial.RXCommand;
 import Serial.TXCommands.*;
 
+import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 class HardwareDriver {
     private static int[] sinArr;
@@ -20,6 +20,8 @@ class HardwareDriver {
 
     private static int currentPhaseStep = 0;
 
+    private static ArrayList<CalibrationStepListener> calibrationStepListeners = new ArrayList<>();
+
     static void init()
     {
         //Bind event handler.
@@ -28,7 +30,7 @@ class HardwareDriver {
         for(int i = 0; i < sinArr.length; i++) //Init stock sin array with a wave.
         {
             sinArr[i] = (int)(127 + 127*Math.sin(2.0*Math.PI*((double)i/sinWaveResolution)));
-            System.out.println(sinArr[i]);
+            //System.out.println(sinArr[i]);
         }
         MvcView.setSinWave(sinArr);
 
@@ -68,9 +70,11 @@ class HardwareDriver {
             }
         }, 0, calibrationStepDelay);
         */
+
+        fireCalibrationStepListeners(new CalibrationStep(.75, "ayy lmao"));
         SerialHandler.sendSerialCommand(new TXACK());
-        SerialHandler.sendSerialCommand(new TXACK());
-        SerialHandler.sendSerialCommand(new TXACK());
+        SerialHandler.sendSerialCommand(new TXSETMODE((byte)1));
+        //SerialHandler.sendSerialCommand(new TXACK());
 
 
 
@@ -79,6 +83,16 @@ class HardwareDriver {
     static void stopCalibration()
     {
         calibrationTimer.cancel();
+    }
+
+    static void addCalibrationStepListener(CalibrationStepListener l){calibrationStepListeners.add(l);}
+
+    private static void fireCalibrationStepListeners(CalibrationStep step)
+    {
+        for(CalibrationStepListener l : calibrationStepListeners)
+        {
+            l.calibrationStepped(step);
+        }
     }
 
     static void setEncoderSteps(int steps){

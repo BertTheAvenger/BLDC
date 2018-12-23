@@ -19,6 +19,9 @@ class SerialHandler {
     private static int packetLength = 0;
 
     private static RXEnums ackCommand;
+    private static Thread txTimeoutWatchdog;
+
+    private static Runnable rxTimeoutWatchdog;
 
     private static List<SerialEventListener> listeners = new ArrayList<>();
 
@@ -29,9 +32,10 @@ class SerialHandler {
 
     static int[] getAvailableBaudrates(){return baudrates;}
 
-    static boolean openSerialConnection(String portName)
+    static boolean openSerialConnection(String portName, int baudRate)
     {
         port = SerialPort.getCommPort(portName);
+        port.setBaudRate(baudRate);
         if(port.openPort()) {
             serialStatus = true;
             sendBuffer = new ArrayList<>();
@@ -142,11 +146,27 @@ class SerialHandler {
     {
         if(serialStatus && port.isOpen())
         {
-            if(ackCommand == null && sendBuffer.size() > 0) //If ACK command is nonexistant and buffer is not empty, send.
+            if(ackCommand == null && sendBuffer.size() > 0) //If ACK command is nonexistant(Not waiting for one) and buffer is not empty, send.
             {
-                TXCommand command = sendBuffer.get(0); //Get oldest command.
-                sendBuffer.remove(0);
-                ackCommand = command.getAckCommand();
+                TXCommand command = sendBuffer.get(0); //Get oldest command in buffer
+                sendBuffer.remove(0); //Remove it, as it will be sent.
+
+                ackCommand = command.getAckCommand(); //get required ACK command
+                if(ackCommand != null && command.getAckTimeout() != 0) //If ACK command exists and timeout exists, start a timeout watchdog.
+                {
+                    txTimeoutWatchdog = new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(command.getAckTimeout());
+                                txCommandTimedOut();
+                            }
+                            catch (Exception ignore){} //Ignore interrupted thread.
+                        }
+                    };
+                    txTimeoutWatchdog.start();
+                }
+
                 System.out.println("SENDING: " + command.toReadableString());
                 byte[] outBuffer = new byte[command.getCommandLength() + 1];
 
@@ -164,6 +184,14 @@ class SerialHandler {
         }
     }
 
+    private static void txCommandTimedOut()
+    {
+        System.out.println("TX TIMEOUT!");
+        ackCommand = null;
+        txTimeoutWatchdog = null;
+        attemptNextSend();
+    }
+
     static void addListener(SerialEventListener listener)
     {
         listeners.add(listener);
@@ -173,6 +201,8 @@ class SerialHandler {
     {
         if(command.getCommandEnum() == ackCommand) { //Ack received
             System.out.println("ACK RECEIVED!");
+            txTimeoutWatchdog.interrupt();
+            txTimeoutWatchdog = null;
             ackCommand = null; //Not waiting anymore
             attemptNextSend(); //Try to send next in buffer.
         }

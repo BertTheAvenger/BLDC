@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 class GCPCalibration extends JPanel //GUI Motor Control Panel. Used by GControlPanel
 {
     JPanel inputPanel;
+    JProgressBar progressBar;
     public GCPCalibration() //ControlPanel Motor.
     {
         super();
@@ -22,6 +23,16 @@ class GCPCalibration extends JPanel //GUI Motor Control Panel. Used by GControlP
             }
         }));
 
+        createProgressBar();
+        add(progressBar);
+        HardwareDriver.addCalibrationStepListener(new CalibrationStepListener() {
+            @Override
+            public void calibrationStepped(CalibrationStep step) {
+                setProgressBar(step.progress, step.descriptor); //Replace with getters and setters
+            }
+        });
+
+
 
     }
 
@@ -36,6 +47,27 @@ class GCPCalibration extends JPanel //GUI Motor Control Panel. Used by GControlP
 
         };
         return panel;
+    }
+
+    private void createProgressBar()
+    {
+        progressBar = new JProgressBar(){
+            public Dimension getMaximumSize()
+            {
+                return new Dimension(super.getMaximumSize().width, 30);
+            }
+        };
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(1000);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        progressBar.setString("LMAO");
+    }
+
+    void setProgressBar(double progress, String label)
+    {
+        progressBar.setValue((int)(progress * 1000));
+        progressBar.setString(label);
     }
 
 

@@ -8,6 +8,7 @@ public interface Command {
     // EX {1} (handshake command) returns 1, {2, 0, 255} (Setphase) returns 3.
 
     byte getCommandByte();
+    //returns singular identifying command byte.
 
 
 }
