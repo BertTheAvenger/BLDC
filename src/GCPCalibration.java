@@ -44,7 +44,6 @@ class GCPCalibration extends JPanel //GUI Motor Control Panel. Used by GControlP
             {
                 return new Dimension(super.getMaximumSize().width, 20);
             }
-
         };
         return panel;
     }

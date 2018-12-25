@@ -23,6 +23,8 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
         calibrationPanel = new GCPCalibration();
         add(calibrationPanel);
 
+        add(new GCPSerialTest());
+
     }
     public void setSerialStatus(int serialStatus){serialStatusIndicator.setSerialStatus(serialStatus);}
 

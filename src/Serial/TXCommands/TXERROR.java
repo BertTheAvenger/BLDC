@@ -1,7 +1,5 @@
 package Serial.TXCommands;
 
-import Serial.RXCommand;
-import Serial.RXEnums;
 import Serial.TXCommand;
 import Serial.TXEnums;
 
@@ -15,11 +13,11 @@ public class TXERROR extends TXCommand
 
     @Override
     public TXEnums getCommandEnum() {
-        return TXEnums.ACK;
+        return TXEnums.ERROR;
     }
 
     @Override
     public String toReadableString() {
-        return "ACK";
+        return "ERROR";
     }
 }

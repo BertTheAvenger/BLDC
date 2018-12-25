@@ -72,7 +72,9 @@ class HardwareDriver {
         */
 
         fireCalibrationStepListeners(new CalibrationStep(.75, "ayy lmao"));
-        SerialHandler.sendSerialCommand(new TXACK());
+        //SerialHandler.sendSerialCommand(new TXACK());
+        SerialHandler.sendSerialCommand(new TXADDSHORTS((short)4, (short) 12));
+        //SerialHandler.sendSerialCommand(new TXTOTALDATA());
         SerialHandler.sendSerialCommand(new TXSETMODE((byte)1));
         //SerialHandler.sendSerialCommand(new TXACK());
 

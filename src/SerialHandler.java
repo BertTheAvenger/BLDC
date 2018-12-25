@@ -192,6 +192,7 @@ class SerialHandler {
         attemptNextSend();
     }
 
+
     static void addListener(SerialEventListener listener)
     {
         listeners.add(listener);
@@ -200,7 +201,7 @@ class SerialHandler {
     private static void eventTriggered(RXCommand command)
     {
         if(command.getCommandEnum() == ackCommand) { //Ack received
-            System.out.println("ACK RECEIVED!");
+            //System.out.println("ACK RECEIVED!");
             txTimeoutWatchdog.interrupt();
             txTimeoutWatchdog = null;
             ackCommand = null; //Not waiting anymore

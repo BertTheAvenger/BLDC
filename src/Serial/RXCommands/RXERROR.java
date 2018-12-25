@@ -5,27 +5,16 @@ import Serial.RXEnums;
 
 public class RXERROR extends RXCommand {
 
+    private byte errorByte;
 
     @Override
-    public byte getCommandByte() {
-        return 0;
-    }
+    public void parseBytes(byte[] commandBytes) { errorByte = commandBytes[1]; }
 
-    @Override
-    public int getCommandLength() {
-        return 0;
-    }
-
-    @Override
-    public void parseBytes(byte[] commandBytes) {
-    }
-
-    public  RXEnums getCommandEnum() {
-        return RXEnums.ERROR;
-    }
+    public  RXEnums getCommandEnum() { return RXEnums.ERROR; }
 
     @Override
     public String toReadableString() {
-        return "ERROR: ";
+        return "ERROR: " + errorByte;
     }
+
 }
