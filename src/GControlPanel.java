@@ -1,3 +1,5 @@
+import Serial.SerialEventEnums;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -26,7 +28,6 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
         add(new GCPSerialTest());
 
     }
-    public void setSerialStatus(int serialStatus){serialStatusIndicator.setSerialStatus(serialStatus);}
 
 
 
@@ -42,7 +43,13 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
             serialLabel.setHorizontalAlignment(SwingConstants.CENTER);
             serialLabel.setVerticalAlignment(SwingConstants.CENTER);
             add(serialLabel, BorderLayout.CENTER);
-            setSerialStatus(0);
+            setSerialStatus(SerialEventEnums.SERIAL_DISCONNECTED);
+            SerialHandler.addRCommandListener(new SerialEventListener() {
+                @Override
+                public void eventPreformed(SerialEventEnums eventEnum) {
+                    setSerialStatus(eventEnum);
+                }
+            });
         }
 
         @Override
@@ -51,13 +58,13 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
             return new Dimension(super.getMaximumSize().width, 15);
         }
 
-        public void setSerialStatus(int serialStatus) {
-            switch (serialStatus){ //0 is disconnected, 1 is connected.
-                case 0:
+        public void setSerialStatus(SerialEventEnums eventEnum) {
+            switch (eventEnum){ //0 is disconnected, 1 is connected.
+                case SERIAL_DISCONNECTED:
                     setBackground(new Color(244,86,66));
                     serialLabel.setText("Serial Disconnected");
                     break;
-                case 1:
+                case SERIAL_CONNECTED:
                     setBackground(new Color(66,244,78));
                     serialLabel.setText("Serial Connected");
                     break;

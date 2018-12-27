@@ -26,7 +26,7 @@ public class RXTOTALDATA extends RXCommand {
 
     @Override
     public String toReadableString() {
-        return "TOTAL DATA: <encoder:" + encoderPos + ", amperageRaw:" + amperageRaw + ", voltageRaw:" + voltageRaw + ">";
+        return "TOTAL DATA: encoder:" + encoderPos + ", amperageRaw: " + amperageRaw + ", voltageRaw:" + voltageRaw;
     }
 
 

@@ -1,5 +1,6 @@
 import Serial.RXCommand;
 import Serial.RXEnums;
+import Serial.SerialEventEnums;
 import Serial.TXCommand;
 import com.fazecast.jSerialComm.*;
 
@@ -23,7 +24,9 @@ class SerialHandler {
 
     private static Runnable rxTimeoutWatchdog;
 
-    private static List<SerialEventListener> listeners = new ArrayList<>();
+    private static List<SerialRXCommandListener> rxListeners = new ArrayList<>();
+    private static List<SerialEventListener> commandListeners = new ArrayList<>();
+
 
     static String[] getPorts()
     {
@@ -38,6 +41,7 @@ class SerialHandler {
         port.setBaudRate(baudRate);
         if(port.openPort()) {
             serialStatus = true;
+            fireEventListeners(SerialEventEnums.SERIAL_CONNECTED);
             sendBuffer = new ArrayList<>();
             port.addDataListener(new SerialPortDataListener() {
                 @Override
@@ -54,9 +58,6 @@ class SerialHandler {
                     }
                 }
             });
-
-
-
             return true;
         }
         else
@@ -72,6 +73,7 @@ class SerialHandler {
             serialStatus = false;
             port.removeDataListener();
             port.closePort();
+            fireEventListeners(SerialEventEnums.SERIAL_DISCONNECTED);
         }
     }
 
@@ -130,7 +132,15 @@ class SerialHandler {
     {
         incomingCommand.parseBytes(packet);
         System.out.println("RECIEVED: " + incomingCommand.toReadableString());
-        eventTriggered(incomingCommand);
+        fireRXCommandListeners(incomingCommand);
+
+        if(incomingCommand.getCommandEnum() == ackCommand) { //Ack received
+            //System.out.println("ACK RECEIVED!");
+            txTimeoutWatchdog.interrupt();
+            txTimeoutWatchdog = null;
+            ackCommand = null; //Not waiting anymore
+            attemptNextSend(); //Try to send next in buffer.
+        }
 
     }
 
@@ -180,7 +190,7 @@ class SerialHandler {
         }
         else
         {
-            MvcController.serialDisconnectActionPreformed();
+            closeSerialConnection();
         }
     }
 
@@ -193,25 +203,31 @@ class SerialHandler {
     }
 
 
-    static void addListener(SerialEventListener listener)
+    static void addRXListener(SerialRXCommandListener listener)
     {
-        listeners.add(listener);
+        rxListeners.add(listener);
+    }
+    static void addRCommandListener(SerialEventListener listener)
+    {
+        commandListeners.add(listener);
     }
 
-    private static void eventTriggered(RXCommand command)
+
+    private static void fireRXCommandListeners(RXCommand command)
     {
-        if(command.getCommandEnum() == ackCommand) { //Ack received
-            //System.out.println("ACK RECEIVED!");
-            txTimeoutWatchdog.interrupt();
-            txTimeoutWatchdog = null;
-            ackCommand = null; //Not waiting anymore
-            attemptNextSend(); //Try to send next in buffer.
-        }
-        for(SerialEventListener l : listeners)
+        for(SerialRXCommandListener l : rxListeners)
         {
-            l.serialEvent(command);
+            l.serialRXEvent(command);
         }
     }
 
+
+    private static void fireEventListeners(SerialEventEnums event)
+    {
+        for(SerialEventListener l : commandListeners)
+        {
+            l.eventPreformed(event);
+        }
+    }
 }
 

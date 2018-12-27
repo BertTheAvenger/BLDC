@@ -1,6 +1,5 @@
-import Serial.RXCommand;
+import Serial.SerialEventEnums;
 
 public interface SerialEventListener {
-    void serialEvent(RXCommand event);
-
+    void eventPreformed(SerialEventEnums eventEnum);
 }

@@ -1,3 +1,5 @@
+import Serial.SerialEventEnums;
+
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -37,8 +39,6 @@ class GSerialJMenu extends JMenu {
             @Override
             public void menuSelected(MenuEvent e) {
                 MvcController.refreshViewBaudRates();
-
-
             }
             @Override
             public void menuDeselected(MenuEvent e) { }
@@ -57,6 +57,21 @@ class GSerialJMenu extends JMenu {
         });
         add(serialConnectionJMenuItem);
 
+
+        SerialHandler.addRCommandListener(new SerialEventListener() {
+            @Override
+            public void eventPreformed(SerialEventEnums eventEnum) {
+                switch(eventEnum)
+                {
+                    case SERIAL_CONNECTED:
+                        setSerialActionDisconnect();
+                        break;
+                    case SERIAL_DISCONNECTED:
+                        setSerialActionConnect();
+                        break;
+                }
+            }
+        });
     }
 
     void updateSerialMenu(String[] ports, String selectedPort){

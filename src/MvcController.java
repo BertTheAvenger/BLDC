@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 class MvcController {
     private static MvcModel model;
     private static int controlMode = 0;
@@ -8,8 +10,14 @@ class MvcController {
 
     static void startInterface()
     {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MvcView.constructGui();
+            }
+        });
 
-        MvcView.constructGui();
+
         HardwareDriver.init();
 
     } //Starts interface
@@ -20,11 +28,9 @@ class MvcController {
     static void refreshViewBaudRates(){MvcView.updateBaudRates(SerialHandler.getAvailableBaudrates(), model.getBaudRate());} //Refreshes view's baud rates, available and selected
     static void serialConnectActionPreformed(){ //Called when serial connect button is clicked. Handles logic to connect to serial.
         //SerialHandler.connectToPort(model.getSelectedSerialPort(), model.getBaudRate());
-
         boolean result = SerialHandler.openSerialConnection(model.getSelectedSerialPort(), model.getBaudRate());
         if(result)
         {
-            MvcView.setSerialActionDisconnect();
             System.out.println("Connection Successful");
         }
         else
@@ -34,6 +40,5 @@ class MvcController {
     }
     static void serialDisconnectActionPreformed() { //Called when serial disconnect button is clicked. Handles logic to reset serial stuff.
         SerialHandler.closeSerialConnection();
-        MvcView.setSerialActionConnect();
     }
 }

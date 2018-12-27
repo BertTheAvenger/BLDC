@@ -51,8 +51,6 @@ public class MvcView {
     //Menu Bar passthrough functions
     static void updateSerialMenu(String[] ports, String selectedPort){menuBar.updateSerialMenu(ports, selectedPort);}
     static void updateBaudRates(int[] rates, int selectedRate){menuBar.updateBaudRates(rates, selectedRate);}
-    static void setSerialActionConnect(){ menuBar.setSerialActionConnect(); mainPanel.setSerialStatus(0);}
-    static void setSerialActionDisconnect(){ menuBar.setSerialActionDisconnect(); mainPanel.setSerialStatus(1); }
     static void setSinWave(int[] sinArr){mainPanel.setSinWave(sinArr);}
 
 }

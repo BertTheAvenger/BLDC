@@ -1,6 +1,7 @@
 import Serial.RXCommand;
 import Serial.TXCommands.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Timer;
 
@@ -25,14 +26,14 @@ class HardwareDriver {
     static void init()
     {
         //Bind event handler.
-        SerialHandler.addListener(HardwareDriver::serialEvent); //Bind serial command event listener.
+        SerialHandler.addRXListener(HardwareDriver::serialEvent); //Bind serial command event listener.
         sinArr = new int[sinWaveResolution];
         for(int i = 0; i < sinArr.length; i++) //Init stock sin array with a wave.
         {
             sinArr[i] = (int)(127 + 127*Math.sin(2.0*Math.PI*((double)i/sinWaveResolution)));
             //System.out.println(sinArr[i]);
         }
-        MvcView.setSinWave(sinArr);
+        SwingUtilities.invokeLater(() -> MvcView.setSinWave(sinArr));
 
     }
 

@@ -23,7 +23,6 @@ public class GMainPanel extends JPanel implements GuiComponent{
 
         return null;
     }
-    public void setSerialStatus(int serialStatus){controlPanel.setSerialStatus(serialStatus);}
     void setSinWave(int[] sinArr){graphPanel.setSinWave(sinArr);}
 }
 
