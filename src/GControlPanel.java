@@ -1,7 +1,6 @@
 import Serial.SerialEventEnums;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class GControlPanel extends JPanel { //Main panel on left side of screen
@@ -25,7 +24,7 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
         calibrationPanel = new GCPCalibration();
         add(calibrationPanel);
 
-        add(new GCPSerialTest());
+        add(new GCPSerialTestPanel());
 
     }
 
@@ -44,7 +43,7 @@ public class GControlPanel extends JPanel { //Main panel on left side of screen
             serialLabel.setVerticalAlignment(SwingConstants.CENTER);
             add(serialLabel, BorderLayout.CENTER);
             setSerialStatus(SerialEventEnums.SERIAL_DISCONNECTED);
-            SerialHandler.addRCommandListener(new SerialEventListener() {
+            SerialHandler.addSerialEventListener(new SerialEventListener() {
                 @Override
                 public void eventPreformed(SerialEventEnums eventEnum) {
                     setSerialStatus(eventEnum);

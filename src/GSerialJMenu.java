@@ -58,7 +58,7 @@ class GSerialJMenu extends JMenu {
         add(serialConnectionJMenuItem);
 
 
-        SerialHandler.addRCommandListener(new SerialEventListener() {
+        SerialHandler.addSerialEventListener(new SerialEventListener() {
             @Override
             public void eventPreformed(SerialEventEnums eventEnum) {
                 switch(eventEnum)

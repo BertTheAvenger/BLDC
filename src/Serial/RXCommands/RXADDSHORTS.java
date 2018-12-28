@@ -22,6 +22,4 @@ public class RXADDSHORTS extends RXCommand {
     public String toReadableString() {
         return "ADDINT - int: " + result;
     }
-
-    public int getResult(){return result;}
 }

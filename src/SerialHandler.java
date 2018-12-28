@@ -22,7 +22,7 @@ class SerialHandler {
     private static RXEnums ackCommand;
     private static Thread txTimeoutWatchdog;
 
-    private static Runnable rxTimeoutWatchdog;
+    //private static Runnable rxTimeoutWatchdog;
 
     private static List<SerialRXCommandListener> rxListeners = new ArrayList<>();
     private static List<SerialEventListener> commandListeners = new ArrayList<>();
@@ -73,6 +73,9 @@ class SerialHandler {
             serialStatus = false;
             port.removeDataListener();
             port.closePort();
+            sendBuffer = new ArrayList<>();
+            ackCommand = null;
+            if(txTimeoutWatchdog != null){txTimeoutWatchdog.interrupt();} //kill watchdog thread
             fireEventListeners(SerialEventEnums.SERIAL_DISCONNECTED);
         }
     }
@@ -108,7 +111,7 @@ class SerialHandler {
             }
             else //Command for byte not found:
             {
-                System.out.println("PACKET RECEIVE ERROR - COMMAND NOT FOUND!");
+                System.out.println("PACKET RECEIVE ERROR - COMMAND BYTE " + b + " NOT FOUND!");
                 recievingPacket = false; //Cancel packet.
             }
 
@@ -164,16 +167,14 @@ class SerialHandler {
                 ackCommand = command.getAckCommand(); //get required ACK command
                 if(ackCommand != null && command.getAckTimeout() != 0) //If ACK command exists and timeout exists, start a timeout watchdog.
                 {
-                    txTimeoutWatchdog = new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(command.getAckTimeout());
-                                txCommandTimedOut();
-                            }
-                            catch (Exception ignore){} //Ignore interrupted thread.
+                    txTimeoutWatchdog = new Thread(() -> {
+                        try {
+                            Thread.sleep(command.getAckTimeout());
+                            txCommandTimedOut();
                         }
-                    };
+                        catch (Exception ignore){} //Ignore interrupted thread.
+                    });
+
                     txTimeoutWatchdog.start();
                 }
 
@@ -207,7 +208,7 @@ class SerialHandler {
     {
         rxListeners.add(listener);
     }
-    static void addRCommandListener(SerialEventListener listener)
+    static void addSerialEventListener(SerialEventListener listener)
     {
         commandListeners.add(listener);
     }
