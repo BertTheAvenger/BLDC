@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class GMainPanel extends JPanel implements GuiComponent{
+class GMainPanel extends JPanel{
     private GGraphHolder graphPanel;
     private GControlPanel controlPanel;
     GMainPanel()
@@ -18,11 +18,6 @@ public class GMainPanel extends JPanel implements GuiComponent{
         add(controlPanel, BorderLayout.LINE_START);
     }
 
-    @Override
-    public GridBagConstraints getConstraints() {
-
-        return null;
-    }
     void setSinWave(int[] sinArr){graphPanel.setSinWave(sinArr);}
 }
 
